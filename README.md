@@ -51,8 +51,7 @@ of books still in copyright are blurred.
 
 Each step of the system has its own README (what it does, why, for what, a simple explanation,
 examples, the technical side, technical examples, and how it connects to the other steps) and a
-Jupyter notebook to run it (`notebooks/build_notebooks.py` generates the notebooks; install
-`.[dev,monitoring,eval]` to run them all).
+Jupyter notebook to run it (`.[dev,monitoring,eval]` to run them all).
 
 | # | Step | |
 |---|---|---|

@@ -1,0 +1,46 @@
+# Alert rules. There is no Alertmanager here, so they show as firing in Prometheus and Grafana
+# rather than paging anyone; add one (or Grafana alerting contact points) to get notified.
+groups:
+  - name: marginalia
+    rules:
+      - alert: MarginaliaRAGDown
+        expr: up{job=~"marginalia-api|marginalia-worker"} == 0
+        for: 2m
+        labels: {severity: critical}
+        annotations:
+          summary: '{{ $labels.service }} is not answering metrics scrapes'
+
+      - alert: ApiErrors
+        expr: |
+          sum(rate(marginalia_http_requests_total{status=~"5.."}[5m]))
+            / clamp_min(sum(rate(marginalia_http_requests_total[5m])), 1e-9) > 0.05
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: 'More than 5% of API requests fail with a server error'
+
+      - alert: QuestionsFailing
+        expr: increase(marginalia_questions_total{outcome="failed"}[15m]) >= 3
+        labels: {severity: warning}
+        annotations:
+          summary: '{{ $value }} questions failed in 15 minutes (is Ollama up?)'
+
+      - alert: SlowAnswers
+        expr: histogram_quantile(0.95, sum by (le) (rate(marginalia_answer_seconds_bucket[30m]))) > 300
+        for: 15m
+        labels: {severity: warning}
+        annotations:
+          summary: 'The slowest 5% of answers take over 5 minutes'
+
+      - alert: QuestionBacklog
+        expr: marginalia_queue_length{queue="ask", state="waiting"} > 20
+        for: 10m
+        labels: {severity: warning}
+        annotations:
+          summary: '{{ $value }} questions are waiting for the agent'
+
+      - alert: BatchFailed
+        expr: increase(airflow_dagrun_duration_seconds_count{dag_id="marginalia_ingest", state="failed"}[2h]) > 0
+        labels: {severity: warning}
+        annotations:
+          summary: 'A book-processing batch failed in the last 2 hours'

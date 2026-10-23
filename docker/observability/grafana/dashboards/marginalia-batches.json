@@ -1,0 +1,510 @@
+{
+ "uid": "marginalia-batches",
+ "title": "MarginaliaRAG: batches (Airflow)",
+ "description": "The hourly book-processing batch: runs, tasks, durations and Airflow logs. Task logs are on the admin page (Pipeline, Logs).",
+ "tags": [
+  "marginalia"
+ ],
+ "timezone": "browser",
+ "schemaVersion": 41,
+ "version": 1,
+ "editable": true,
+ "refresh": "1m",
+ "time": {
+  "from": "now-24h",
+  "to": "now"
+ },
+ "panels": [
+  {
+   "type": "row",
+   "title": "Batches",
+   "id": 1,
+   "collapsed": false,
+   "panels": [],
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Batches succeeded, 7 days",
+   "id": 2,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "round((sum(increase(airflow_dagrun_duration_seconds_count{dag_id=\"marginalia_ingest\", state=\"success\"}[7d]))) or vector(0))",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 6,
+    "x": 0,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Batches failed, 7 days",
+   "id": 3,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "round((sum(increase(airflow_dagrun_duration_seconds_count{dag_id=\"marginalia_ingest\", state=\"failed\"}[7d]))) or vector(0))",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 6,
+    "x": 6,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Average batch, 7 days",
+   "id": 4,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum(increase(airflow_dagrun_duration_seconds_sum{dag_id=\"marginalia_ingest\"}[7d])) / clamp_min(sum(increase(airflow_dagrun_duration_seconds_count{dag_id=\"marginalia_ingest\"}[7d])), 1)",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 6,
+    "x": 12,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Tasks failed, 24 h",
+   "id": 5,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "round((sum(increase(airflow_task_finished_total{dag_id=\"marginalia_ingest\", state=\"failed\"}[24h]))) or vector(0))",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 6,
+    "x": 18,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Batch duration",
+   "id": 6,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (state) (rate(airflow_dagrun_duration_seconds_sum{dag_id=\"marginalia_ingest\"}[1h])) / sum by (state) (rate(airflow_dagrun_duration_seconds_count{dag_id=\"marginalia_ingest\"}[1h]))",
+     "legendFormat": "{{state}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 5
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Tasks finished by state (per hour)",
+   "id": 7,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (state) (increase(airflow_task_finished_total{dag_id=\"marginalia_ingest\"}[1h]))",
+     "legendFormat": "{{state}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 12,
+    "y": 5
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Task time p95",
+   "id": 8,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.95, sum by (le, task_id) (rate(airflow_task_duration_seconds_bucket{dag_id=\"marginalia_ingest\"}[6h])))",
+     "legendFormat": "{{task_id}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 0,
+    "y": 13
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Pool slots in use",
+   "id": 9,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "airflow_pool_running_slots",
+     "legendFormat": "{{pool}} running",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    },
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "airflow_pool_queued_slots",
+     "legendFormat": "{{pool}} queued",
+     "refId": "B",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 8,
+    "y": 13
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Executor",
+   "id": 10,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "airflow_executor_running_tasks",
+     "legendFormat": "running",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    },
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "airflow_executor_queued_tasks",
+     "legendFormat": "queued",
+     "refId": "B",
+     "instant": false,
+     "range": true
+    },
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "airflow_executor_open_slots",
+     "legendFormat": "open slots",
+     "refId": "C",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 16,
+    "y": 13
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "row",
+   "title": "Logs",
+   "id": 11,
+   "collapsed": false,
+   "panels": [],
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 21
+   }
+  },
+  {
+   "type": "logs",
+   "title": "Airflow",
+   "id": 12,
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "{service=~\"airflow-scheduler|airflow-apiserver|airflow-dag-processor\"}",
+     "refId": "A"
+    }
+   ],
+   "gridPos": {
+    "h": 10,
+    "w": 24,
+    "x": 0,
+    "y": 22
+   },
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "showTime": true,
+    "wrapLogMessage": true,
+    "sortOrder": "Descending",
+    "enableLogDetails": true
+   }
+  }
+ ],
+ "templating": {
+  "list": []
+ },
+ "annotations": {
+  "list": []
+ }
+}

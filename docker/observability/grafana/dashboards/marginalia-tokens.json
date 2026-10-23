@@ -1,0 +1,676 @@
+{
+ "uid": "marginalia-tokens",
+ "title": "MarginaliaRAG: tokens",
+ "description": "LLM tokens per answer, reader and book, and generation speed. Speeds come from Prometheus; per-reader figures from the reporting views in Postgres.",
+ "tags": [
+  "marginalia"
+ ],
+ "timezone": "browser",
+ "schemaVersion": 41,
+ "version": 1,
+ "editable": true,
+ "refresh": "1m",
+ "time": {
+  "from": "now-24h",
+  "to": "now"
+ },
+ "panels": [
+  {
+   "type": "row",
+   "title": "Tokens behind the answers (agent and grader; thinking included)",
+   "id": 1,
+   "collapsed": false,
+   "panels": [],
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Tokens",
+   "id": 2,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT COALESCE(sum(total_tokens), 0) FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL",
+     "format": "table",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 0,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": ""
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Per answer, average",
+   "id": 3,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT round(avg(total_tokens)) FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL",
+     "format": "table",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 4,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": ""
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Per answer, most",
+   "id": 4,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT max(total_tokens) FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL",
+     "format": "table",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 8,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": ""
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Per answer, fewest",
+   "id": 5,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT min(total_tokens) FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL",
+     "format": "table",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 12,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": ""
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Tokens per second, average",
+   "id": 6,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT round(avg(tokens_per_second)::numeric, 1) FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL",
+     "format": "table",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 16,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": ""
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Grader share",
+   "id": 7,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT sum(grader_tokens)::float / NULLIF(sum(total_tokens), 0) FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL",
+     "format": "table",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 20,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percentunit"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": ""
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Generation speed (tokens per second)",
+   "id": 8,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.5, sum by (le, role) (rate(marginalia_llm_tokens_per_second_bucket[30m])))",
+     "legendFormat": "{{role}} median",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    },
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.05, sum by (le, role) (rate(marginalia_llm_tokens_per_second_bucket[30m])))",
+     "legendFormat": "{{role}} slowest 5%",
+     "refId": "B",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 0,
+    "y": 5
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Tokens per minute",
+   "id": 9,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (role, kind) (rate(marginalia_llm_tokens_total[5m])) * 60",
+     "legendFormat": "{{role}} {{kind}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 8,
+    "y": 5
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Tokens per answer",
+   "id": 10,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.5, sum by (le) (rate(marginalia_llm_tokens_per_answer_bucket[1h])))",
+     "legendFormat": "median",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    },
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.95, sum by (le) (rate(marginalia_llm_tokens_per_answer_bucket[1h])))",
+     "legendFormat": "p95",
+     "refId": "B",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 16,
+    "y": 5
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "row",
+   "title": "By reader and book",
+   "id": 11,
+   "collapsed": false,
+   "panels": [],
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 13
+   }
+  },
+  {
+   "type": "table",
+   "title": "Tokens per reader",
+   "id": 12,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT reader AS \"Reader\", count(*) AS \"Answers\", sum(total_tokens) AS \"Tokens\", round(avg(total_tokens)) AS \"Average\", max(total_tokens) AS \"Most\", min(total_tokens) AS \"Fewest\", round(avg(tokens_per_second)::numeric, 1) AS \"Tokens/s\" FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL GROUP BY reader ORDER BY 3 DESC",
+     "format": "table",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 9,
+    "w": 14,
+    "x": 0,
+    "y": 14
+   },
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "showHeader": true
+   }
+  },
+  {
+   "type": "table",
+   "title": "Tokens per book",
+   "id": 13,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT book AS \"Book\", count(*) AS \"Answers\", sum(total_tokens) AS \"Tokens\", round(avg(total_tokens)) AS \"Average\" FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL GROUP BY book ORDER BY 3 DESC",
+     "format": "table",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 9,
+    "w": 10,
+    "x": 14,
+    "y": 14
+   },
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "showHeader": true
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Tokens per reader over time",
+   "id": 14,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT $__timeGroupAlias(created_at, '1h'), reader AS metric, sum(total_tokens) AS value FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL GROUP BY 1, 2 ORDER BY 1",
+     "format": "time_series",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 23
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Answer tokens: prompt and completion",
+   "id": 15,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT $__timeGroupAlias(created_at, '1h'), sum(prompt_tokens) AS prompt, sum(completion_tokens) AS completion FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL GROUP BY 1 ORDER BY 1",
+     "format": "time_series",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 12,
+    "y": 23
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "row",
+   "title": "The most expensive answers",
+   "id": 16,
+   "collapsed": false,
+   "panels": [],
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 31
+   }
+  },
+  {
+   "type": "table",
+   "title": "Answers with the most tokens",
+   "id": 17,
+   "datasource": {
+    "type": "grafana-postgresql-datasource",
+    "uid": "questions"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "grafana-postgresql-datasource",
+      "uid": "questions"
+     },
+     "refId": "A",
+     "rawSql": "SELECT created_at AS \"Asked\", reader AS \"Reader\", book AS \"Book\", left(question, 120) AS \"Question\", total_tokens AS \"Tokens\", agent_tokens AS \"Agent\", grader_tokens AS \"Grader\", searches AS \"Searches\", round(seconds::numeric, 1) AS \"Seconds\", tokens_per_second AS \"Tokens/s\" FROM reporting.questions WHERE $__timeFilter(created_at) AND total_tokens IS NOT NULL ORDER BY total_tokens DESC LIMIT 20",
+     "format": "table",
+     "rawQuery": true,
+     "editorMode": "code"
+    }
+   ],
+   "gridPos": {
+    "h": 10,
+    "w": 24,
+    "x": 0,
+    "y": 32
+   },
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "showHeader": true
+   }
+  }
+ ],
+ "templating": {
+  "list": []
+ },
+ "annotations": {
+  "list": []
+ }
+}

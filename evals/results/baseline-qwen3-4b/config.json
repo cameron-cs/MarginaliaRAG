@@ -1,0 +1,10 @@
+{
+ "model": "qwen3:4b",
+ "num_ctx": 16384,
+ "embed_model": "intfloat/e5-base-v2",
+ "max_tool_calls": 6,
+ "max_revisions": 1,
+ "grade": true,
+ "prompts_sha": "6a94ecfd6cef",
+ "golden_sha": "63db9471183a"
+}

@@ -1,0 +1,22 @@
+# Environments and tooling
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.idea/
+*.egg-info/
+build/
+
+# Local configuration (copy .env.example)
+.env
+
+# Per-book library: uploaded PDFs and everything derived from them. Uploaded books
+# may be copyrighted, so they never go into git.
+library/
+
+# Local-only test PDFs (copyrighted books for manual tests)
+test-books/
+
+# Web UI build output and dependencies
+ui/node_modules/
+ui/dist/

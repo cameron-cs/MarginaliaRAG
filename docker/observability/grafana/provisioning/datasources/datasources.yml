@@ -1,0 +1,30 @@
+# Grafana's data sources, provisioned at start-up; the dashboards refer to them by uid.
+apiVersion: 1
+datasources:
+  - name: Prometheus
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData: {timeInterval: 15s}
+  # The questions, read through the reporting views only (migrations/versions/0004_reporting_views.py)
+  - name: Questions (Postgres)
+    uid: questions
+    type: grafana-postgresql-datasource
+    access: proxy
+    url: postgres:5432
+    user: marginalia_reporting
+    secureJsonData:
+      password: $CP_REPORTING_DB_PASSWORD
+    jsonData:
+      database: marginalia
+      sslmode: disable
+      postgresVersion: 1700
+      timescaledb: false
+  - name: Loki
+    uid: loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData: {maxLines: 1000}

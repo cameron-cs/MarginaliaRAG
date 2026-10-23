@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "marginalia-rag"
+version = "0.6.0"
+description = "Question answering over books: chapter-aware ingestion, hybrid retrieval, MCP tools and a ReAct agent."
+requires-python = ">=3.12"
+dependencies = [
+    "pypdf>=5",
+    "langchain-core>=1.0",
+    "langchain==1.4.7",
+    "langchain-ollama==1.1.0",
+    "langchain-mcp-adapters==0.3.2",
+    # fastmcp 4.x needs mcp>=2, but langchain-mcp-adapters 0.3.2 needs mcp<2.
+    "fastmcp==3.4.11",
+    "qdrant-client==1.20.0",
+    "fastembed==0.9.0",
+    "httpx>=0.28",
+    "pillow>=10",                   # covers (marginalia.ingest.cover)
+    "prometheus-client>=0.26",      # metrics (marginalia.metrics)
+    # backend
+    "fastapi>=0.120",
+    "uvicorn[standard]>=0.30",
+    "sqlalchemy[asyncio]>=2.0",
+    "asyncpg>=0.30",
+    "alembic>=1.14",
+    "pyjwt>=2.9",
+    "argon2-cffi>=23",
+    "redis>=5",
+    "python-multipart>=0.0.20",
+    "email-validator>=2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "fpdf2>=2.8", "fakeredis>=2.26", "aiosqlite>=0.20"]
+# LLM monitoring reports for the Evidently UI (marginalia.monitoring); its own image, not the app's.
+monitoring = ["evidently==0.7.23", "pandas>=2.2,<3"]
+# Offline evaluation with DeepEval metrics, judged by the local model (marginalia.evals.deepeval_suite).
+eval = ["deepeval==4.2.7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

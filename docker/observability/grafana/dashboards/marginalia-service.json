@@ -1,0 +1,1050 @@
+{
+ "uid": "marginalia-service",
+ "title": "MarginaliaRAG: readers and questions",
+ "description": "Questions (agent, cache, refusals), answer time, the API and the worker.",
+ "tags": [
+  "marginalia"
+ ],
+ "timezone": "browser",
+ "schemaVersion": 41,
+ "version": 1,
+ "editable": true,
+ "refresh": "30s",
+ "time": {
+  "from": "now-24h",
+  "to": "now"
+ },
+ "panels": [
+  {
+   "type": "row",
+   "title": "Questions",
+   "id": 1,
+   "collapsed": false,
+   "panels": [],
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Answered by the agent, 24 h",
+   "id": 2,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "round((sum(increase(marginalia_questions_total{outcome=\"agent\"}[24h]))) or vector(0))",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 0,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "From the cache, 24 h",
+   "id": 3,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "round((sum(increase(marginalia_questions_total{outcome=\"cache\"}[24h]))) or vector(0))",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 4,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Refused, 24 h",
+   "id": 4,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "round((sum(increase(marginalia_questions_total{outcome=\"refused\"}[24h]))) or vector(0))",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 8,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Failed, 24 h",
+   "id": 5,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "round((sum(increase(marginalia_questions_total{outcome=\"failed\"}[24h]))) or vector(0))",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 12,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Cache hit rate, 24 h",
+   "id": 6,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum(increase(marginalia_questions_total{outcome=\"cache\"}[24h])) / clamp_min(sum(increase(marginalia_questions_total{outcome=~\"agent|cache\"}[24h])), 1)",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 16,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percentunit"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Answers checked as supported, 24 h",
+   "id": 7,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum(increase(marginalia_answers_checked_total{verdict=\"supported\"}[24h])) / clamp_min(sum(increase(marginalia_answers_checked_total[24h])), 1)",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 4,
+    "x": 20,
+    "y": 1
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percentunit"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Questions by outcome (per 5 min)",
+   "id": 8,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (outcome) (increase(marginalia_questions_total[5m]))",
+     "legendFormat": "{{outcome}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 5
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Agent answer time",
+   "id": 9,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.5, sum by (le) (rate(marginalia_answer_seconds_bucket[15m])))",
+     "legendFormat": "median",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    },
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.95, sum by (le) (rate(marginalia_answer_seconds_bucket[15m])))",
+     "legendFormat": "p95",
+     "refId": "B",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 12,
+    "y": 5
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Refusals by reason (per hour)",
+   "id": 10,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (reason) (increase(marginalia_questions_refused_total[1h]))",
+     "legendFormat": "{{reason}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 0,
+    "y": 13
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Grader's verdicts (per hour)",
+   "id": 11,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (verdict) (increase(marginalia_answers_checked_total[1h]))",
+     "legendFormat": "{{verdict}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 8,
+    "y": 13
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Searches per answer",
+   "id": 12,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.5, sum by (le) (rate(marginalia_agent_tool_calls_bucket[1h])))",
+     "legendFormat": "median",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    },
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.95, sum by (le) (rate(marginalia_agent_tool_calls_bucket[1h])))",
+     "legendFormat": "p95",
+     "refId": "B",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 16,
+    "y": 13
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "row",
+   "title": "API",
+   "id": 13,
+   "collapsed": false,
+   "panels": [],
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 21
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Requests per second",
+   "id": 14,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum(rate(marginalia_http_requests_total[5m]))",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 6,
+    "x": 0,
+    "y": 22
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "reqps"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Server errors",
+   "id": 15,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "(sum(rate(marginalia_http_requests_total{status=~\"5..\"}[5m])) or vector(0)) / clamp_min(sum(rate(marginalia_http_requests_total[5m])), 1e-9)",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 6,
+    "x": 6,
+    "y": 22
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percentunit"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "p95 latency",
+   "id": 16,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.95, sum by (le) (rate(marginalia_http_request_duration_seconds_bucket{route!=\"ui\"}[5m])))",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 6,
+    "x": 12,
+    "y": 22
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Readers",
+   "id": 17,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum(marginalia_users{state=\"active\"})",
+     "legendFormat": "__auto",
+     "refId": "A",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "gridPos": {
+    "h": 4,
+    "w": 6,
+    "x": 18,
+    "y": 22
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "colorMode": "none",
+    "graphMode": "none",
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Requests by status",
+   "id": 18,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "sum by (status) (rate(marginalia_http_requests_total[5m]))",
+     "legendFormat": "{{status}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 26
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "reqps"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "p95 latency by route",
+   "id": 19,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "topk(8, histogram_quantile(0.95, sum by (le, route) (rate(marginalia_http_request_duration_seconds_bucket{route!=\"ui\"}[5m]))))",
+     "legendFormat": "{{route}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 12,
+    "y": 26
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "row",
+   "title": "Worker and library",
+   "id": 20,
+   "collapsed": false,
+   "panels": [],
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 34
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Queues",
+   "id": 21,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "marginalia_queue_length{state=\"waiting\"}",
+     "legendFormat": "{{queue}} waiting",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    },
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "marginalia_queue_length{state=\"pending\"}",
+     "legendFormat": "{{queue}} in progress",
+     "refId": "B",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 0,
+    "y": 35
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Job time p95 by queue",
+   "id": 22,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "histogram_quantile(0.95, sum by (le, queue) (rate(marginalia_job_seconds_bucket[15m])))",
+     "legendFormat": "{{queue}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 8,
+    "y": 35
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Books by status",
+   "id": 23,
+   "datasource": {
+    "type": "prometheus",
+    "uid": "prometheus"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "prometheus",
+      "uid": "prometheus"
+     },
+     "expr": "marginalia_books",
+     "legendFormat": "{{status}}",
+     "refId": "A",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "gridPos": {
+    "h": 8,
+    "w": 8,
+    "x": 16,
+    "y": 35
+   },
+   "fieldConfig": {
+    "defaults": {
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   }
+  },
+  {
+   "type": "row",
+   "title": "Logs",
+   "id": 24,
+   "collapsed": false,
+   "panels": [],
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 43
+   }
+  },
+  {
+   "type": "logs",
+   "title": "Warnings and errors (API and worker)",
+   "id": 25,
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "{service=~\"api|worker\", level=~\"warning|error|critical\"}",
+     "refId": "A"
+    }
+   ],
+   "gridPos": {
+    "h": 10,
+    "w": 24,
+    "x": 0,
+    "y": 44
+   },
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "showTime": true,
+    "wrapLogMessage": true,
+    "sortOrder": "Descending",
+    "enableLogDetails": true
+   }
+  },
+  {
+   "type": "logs",
+   "title": "All API and worker logs",
+   "id": 26,
+   "datasource": {
+    "type": "loki",
+    "uid": "loki"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "loki",
+      "uid": "loki"
+     },
+     "expr": "{service=~\"api|worker\"}",
+     "refId": "A"
+    }
+   ],
+   "gridPos": {
+    "h": 10,
+    "w": 24,
+    "x": 0,
+    "y": 54
+   },
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "showTime": true,
+    "wrapLogMessage": true,
+    "sortOrder": "Descending",
+    "enableLogDetails": true
+   }
+  }
+ ],
+ "templating": {
+  "list": []
+ },
+ "annotations": {
+  "list": []
+ }
+}

@@ -1,0 +1,21 @@
+# Prometheus for marginalia: scrapes the API and the worker (marginalia.metrics), Airflow (through the
+# StatsD exporter), Loki, Alloy and itself. Every target lives in the compose network.
+global:
+  scrape_interval: 15s
+  evaluation_interval: 30s
+
+scrape_configs:
+  - job_name: marginalia-api
+    static_configs: [{targets: ['api:9100'], labels: {service: api}}]
+  - job_name: marginalia-worker
+    static_configs: [{targets: ['worker:9100'], labels: {service: worker}}]
+  - job_name: airflow
+    static_configs: [{targets: ['statsd-exporter:9102'], labels: {service: airflow}}]
+  - job_name: loki
+    static_configs: [{targets: ['loki:3100']}]
+  - job_name: alloy
+    static_configs: [{targets: ['alloy:12345']}]
+  - job_name: prometheus
+    static_configs: [{targets: ['localhost:9090']}]
+
+rule_files: [/etc/prometheus/alerts.yml]

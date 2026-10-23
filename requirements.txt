@@ -1,0 +1,2 @@
+# Dependencies live in pyproject.toml; this installs the package for development.
+-e .[dev]

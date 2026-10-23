@@ -1,0 +1,9 @@
+# The dashboards in grafana/dashboards (written by build_dashboards.py), in a "marginalia" folder.
+apiVersion: 1
+providers:
+  - name: marginalia
+    folder: marginalia
+    type: file
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards

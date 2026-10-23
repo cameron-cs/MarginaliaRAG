@@ -1,0 +1,56 @@
+// Grafana Alloy: ships this project's container logs to Loki.
+//
+// Containers are found through the Docker socket; only this compose project's are kept (not other
+// projects on the same Docker). Labels: service (the compose service), container. marginalia's own
+// services log JSON lines (marginalia.logs): their level becomes a label, and the request and
+// question ids structured metadata, so they can be filtered without bloating the index.
+
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "project" {
+  targets = discovery.docker.containers.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+    regex         = sys.env("COMPOSE_PROJECT")
+    action        = "keep"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    target_label  = "service"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+}
+
+loki.source.docker "containers" {
+  host          = "unix:///var/run/docker.sock"
+  targets       = discovery.relabel.project.output
+  relabel_rules = discovery.relabel.project.rules
+  forward_to    = [loki.process.marginalia.receiver]
+}
+
+loki.process "marginalia" {
+  // JSON lines from marginalia; other services' plain lines pass through unchanged.
+  stage.json {
+    expressions = {level = "level", logger = "logger", request_id = "request_id", question_id = "question_id"}
+  }
+  stage.labels {
+    values = {level = ""}
+  }
+  stage.structured_metadata {
+    values = {logger = "", request_id = "", question_id = ""}
+  }
+  forward_to = [loki.write.local.receiver]
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

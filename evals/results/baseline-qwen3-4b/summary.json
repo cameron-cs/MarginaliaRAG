@@ -1,0 +1,155 @@
+{
+ "questions": 16,
+ "runs": 16,
+ "errors": 0,
+ "accuracy": 0.875,
+ "accuracy_ci95": [
+  0.6875,
+  1.0
+ ],
+ "consistency": null,
+ "by_category": {
+  "single_fact": 0.8889,
+  "who_said": 1.0,
+  "multi_hop": 0.6667,
+  "unanswerable": 1.0
+ },
+ "retrieved_gold": 0.7143,
+ "cited_gold": 0.7143,
+ "grader_supported": 0.625,
+ "runs_with_unknown_citations": 0.1875,
+ "mean_tool_calls": 2.0625,
+ "revised": 0.875,
+ "budget_exhausted": 0,
+ "mean_seconds": 102.9688,
+ "per_question": {
+  "car": {
+   "category": "unanswerable",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    null
+   ]
+  },
+  "false-confession": {
+   "category": "single_fact",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    false
+   ]
+  },
+  "fiance": {
+   "category": "single_fact",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "fiancee-mother": {
+   "category": "multi_hop",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    false
+   ]
+  },
+  "football": {
+   "category": "unanswerable",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    null
+   ]
+  },
+  "governess": {
+   "category": "multi_hop",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "hiding-place": {
+   "category": "single_fact",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "investigator": {
+   "category": "single_fact",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "marmeladov-death": {
+   "category": "single_fact",
+   "correct": 0,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "principle-quote": {
+   "category": "who_said",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "reader-father": {
+   "category": "multi_hop",
+   "correct": 0,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "sentence": {
+   "category": "single_fact",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "sister-name": {
+   "category": "single_fact",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    false
+   ]
+  },
+  "svidrigailov-death": {
+   "category": "single_fact",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "tavern-speaker": {
+   "category": "who_said",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    true
+   ]
+  },
+  "victims": {
+   "category": "single_fact",
+   "correct": 1,
+   "runs": 1,
+   "retrieved_gold": [
+    false
+   ]
+  }
+ }
+}

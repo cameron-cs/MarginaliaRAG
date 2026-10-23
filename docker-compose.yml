@@ -1,8 +1,6 @@
 # The project name: container labels and volume names start with it (Alloy keeps only its logs).
 name: marginalia-rag
 
-# Qdrant for this project only. Host ports 6340/6341 avoid the 6333 already
-# taken on this machine (WSL) and pronet's Qdrant on 6335.
 # Airflow (`docker compose --profile airflow up -d --build`): processes uploaded books in batches,
 # on $CP_INGEST_SCHEDULE. Tasks run under the LocalExecutor inside the scheduler container.
 x-airflow: &airflow
@@ -64,7 +62,7 @@ services:
       timeout: 3s
       retries: 10
 
-  # This project's own Ollama, separate from pronet's. Tuned through .env (see .env.example).
+  # This project's own Ollama, tuned through .env (see .env.example).
   # The CP_ prefix keeps OLLAMA_* variables set globally for other Ollama installs from leaking in.
   ollama:
     image: ollama/ollama:0.12.3
